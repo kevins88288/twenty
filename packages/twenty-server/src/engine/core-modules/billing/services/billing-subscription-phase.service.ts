@@ -11,7 +11,6 @@ import {
 } from 'twenty-shared/utils';
 import { Repository } from 'typeorm';
 
-import { BillingSubscriptionSchedulePhaseDTO } from 'src/engine/core-modules/billing/dtos/billing-subscription-schedule-phase.dto';
 import { BillingPriceEntity } from 'src/engine/core-modules/billing/entities/billing-price.entity';
 import { BillingPlanKey } from 'src/engine/core-modules/billing/enums/billing-plan-key.enum';
 import { SubscriptionInterval } from 'src/engine/core-modules/billing/enums/billing-subscription-interval.enum';
@@ -28,24 +27,36 @@ export class BillingSubscriptionPhaseService {
     private readonly billingPriceService: BillingPriceService,
   ) {}
 
-  async getDetailsFromPhase(phase: BillingSubscriptionSchedulePhaseDTO) {
+  async getDetailsFromPhase(phase: Stripe.SubscriptionSchedule.Phase) {
+    const meteredStripePrice = findOrThrow(
+      phase.items,
+      ({ quantity }) => !isDefined(quantity),
+    ).price;
+
+    const meteredStripePriceId =
+      typeof meteredStripePrice === 'string'
+        ? meteredStripePrice
+        : meteredStripePrice.id;
+
     const meteredPrice = await this.billingPriceRepository.findOneOrFail({
       where: {
-        stripePriceId: findOrThrow(
-          phase.items,
-          ({ quantity }) => !isDefined(quantity),
-        ).price,
+        stripePriceId: meteredStripePriceId,
       },
     });
 
-    const { quantity, price: licensedItemPriceId } = findOrThrow(
+    const { quantity, price: licensedItemPrice } = findOrThrow(
       phase.items,
       ({ quantity }) => isDefined(quantity),
     );
 
+    const licensedStripePriceId =
+      typeof licensedItemPrice === 'string'
+        ? licensedItemPrice
+        : licensedItemPrice.id;
+
     const licensedPrice = await this.billingPriceRepository.findOneOrFail({
       where: {
-        stripePriceId: licensedItemPriceId,
+        stripePriceId: licensedStripePriceId,
       },
     });
 
