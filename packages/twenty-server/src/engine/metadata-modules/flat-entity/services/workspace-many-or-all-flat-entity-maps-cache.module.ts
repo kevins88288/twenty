@@ -10,6 +10,7 @@ import { WorkspaceFlatPageLayoutTabMapCacheService } from 'src/engine/metadata-m
 import { WorkspaceFlatPageLayoutWidgetMapCacheService } from 'src/engine/metadata-modules/flat-page-layout-widget/services/workspace-flat-page-layout-widget-map-cache.service';
 import { WorkspaceFlatPageLayoutMapCacheService } from 'src/engine/metadata-modules/flat-page-layout/services/workspace-flat-page-layout-map-cache.service';
 import { WorkspaceFlatViewFieldMapCacheService } from 'src/engine/metadata-modules/flat-view-field/services/workspace-flat-view-field-map-cache.service';
+import { WorkspaceFlatViewFilterGroupMapCacheService } from 'src/engine/metadata-modules/flat-view-filter-group/services/workspace-flat-view-filter-group-map-cache.service';
 import { WorkspaceFlatViewFilterMapCacheService } from 'src/engine/metadata-modules/flat-view-filter/services/workspace-flat-view-filter-map-cache.service';
 import { WorkspaceFlatViewGroupMapCacheService } from 'src/engine/metadata-modules/flat-view-group/services/workspace-flat-view-group-map-cache.service';
 import { WorkspaceFlatViewMapCacheService } from 'src/engine/metadata-modules/flat-view/services/workspace-flat-view-map-cache.service';
@@ -20,6 +21,7 @@ import { PageLayoutTabEntity } from 'src/engine/metadata-modules/page-layout-tab
 import { PageLayoutWidgetEntity } from 'src/engine/metadata-modules/page-layout-widget/entities/page-layout-widget.entity';
 import { PageLayoutEntity } from 'src/engine/metadata-modules/page-layout/entities/page-layout.entity';
 import { ViewFieldEntity } from 'src/engine/metadata-modules/view-field/entities/view-field.entity';
+import { ViewFilterGroupEntity } from 'src/engine/metadata-modules/view-filter-group/entities/view-filter-group.entity';
 import { ViewFilterEntity } from 'src/engine/metadata-modules/view-filter/entities/view-filter.entity';
 import { ViewGroupEntity } from 'src/engine/metadata-modules/view-group/entities/view-group.entity';
 import { ViewEntity } from 'src/engine/metadata-modules/view/entities/view.entity';
@@ -32,6 +34,7 @@ import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache
       ViewEntity,
       ViewFieldEntity,
       ViewFilterEntity,
+      ViewFilterGroupEntity,
       ViewGroupEntity,
       IndexMetadataEntity,
       IndexFieldMetadataEntity,
@@ -48,6 +51,7 @@ import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache
     WorkspaceFlatViewMapCacheService,
     WorkspaceFlatViewFieldMapCacheService,
     WorkspaceFlatViewFilterMapCacheService,
+    WorkspaceFlatViewFilterGroupMapCacheService,
     WorkspaceFlatIndexMapCacheService,
     WorkspaceFlatFieldMetadataMapCacheService,
     WorkspaceFlatViewGroupMapCacheService,
@@ -61,6 +65,7 @@ import { WorkspaceCacheModule } from 'src/engine/workspace-cache/workspace-cache
     WorkspaceFlatViewMapCacheService,
     WorkspaceFlatViewFieldMapCacheService,
     WorkspaceFlatViewFilterMapCacheService,
+    WorkspaceFlatViewFilterGroupMapCacheService,
     WorkspaceFlatIndexMapCacheService,
     WorkspaceFlatFieldMetadataMapCacheService,
     WorkspaceFlatViewGroupMapCacheService,
