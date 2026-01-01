@@ -6,7 +6,7 @@ services:
     volumes:
       - server-local-data:/app/packages/twenty-server/.local-storage
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       NODE_PORT: 3000
       PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/default
@@ -108,6 +108,8 @@ services:
 
   db:
     image: postgres:16
+    ports:
+      - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -123,6 +125,8 @@ services:
 
   redis:
     image: redis
+    ports:
+      - "6379:6379"
     restart: always
     command: ["--maxmemory-policy", "noeviction"]
     healthcheck:

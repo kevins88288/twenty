@@ -32,13 +32,32 @@ Detailed documentation is in `.agent_docs/`:
 
 ## Key Commands
 
-### Development
+### Docker Management
+All commands run from: `cd ~/workspace/twentyone/packages/twenty-docker`
+
 ```bash
-twenty-dev            # Start DEV MODE (PM2) - fast iteration
-twenty-docker         # Start DOCKER MODE - production testing
-twenty-status         # Check current mode
-npx nx start          # Start all services (alternative)
+# Start/Stop
+docker compose -f docker-compose.local.yml up -d       # Start all services
+docker compose -f docker-compose.local.yml stop        # Stop all services
+docker compose -f docker-compose.local.yml down        # Stop and remove containers
+
+# Restart
+docker compose -f docker-compose.local.yml restart server   # Restart server
+docker compose -f docker-compose.local.yml restart worker   # Restart worker
+
+# Rebuild (after code changes)
+docker compose -f docker-compose.local.yml build            # Rebuild image
+docker compose -f docker-compose.local.yml up -d            # Start with new image
+
+# Logs
+docker compose -f docker-compose.local.yml logs -f          # All logs
+docker compose -f docker-compose.local.yml logs -f server   # Server logs
+
+# Status
+docker compose -f docker-compose.local.yml ps               # Container status
 ```
+
+Shortcut alias available: `dc` (e.g., `dc up -d`, `dc logs -f`)
 
 ### Testing
 ```bash
@@ -78,22 +97,21 @@ packages/
 
 ---
 
-## OCI Deployment
+## Deployment (Docker-only)
 
-### Mode Commands
-```bash
-twenty-dev            # DEV MODE - fast iteration, auto-reload backend
-twenty-docker         # DOCKER MODE - production testing
-twenty-status         # Check current mode
-twenty-stop           # Stop all services
-twenty-rebuild-front  # Rebuild frontend (DEV MODE only)
+### Architecture
+```
+4 Containers:
+├── server    (twenty-local:latest, port 3001) - NestJS + React frontend
+├── worker    (same image) - BullMQ background jobs
+├── db        (postgres:16, port 5432)
+└── redis     (redis, port 6379)
 ```
 
 ### Infrastructure
+- Application: http://localhost:3001
 - PostgreSQL: localhost:5432
 - Redis: localhost:6379
-- Frontend: Port 3001
-- Backend: Port 3000 (DEV) / 3002 (DOCKER)
 
 ---
 
@@ -101,25 +119,26 @@ twenty-rebuild-front  # Rebuild frontend (DEV MODE only)
 
 ### Backup Commands
 ```bash
-twenty-backup       # Create backup (keeps last 7)
-twenty-restore      # Restore from backup
-twenty-backup-list  # List available backups
-```
+# Create backup
+docker compose -f docker-compose.local.yml exec db pg_dump -U postgres default | gzip > ~/backup.sql.gz
 
-Backups: `/home/ubuntu/workspace/twentyone/backups/`
-Auto-backup: Daily at 3 AM
+# Restore backup
+gunzip -c ~/backup.sql.gz | docker compose -f docker-compose.local.yml exec -T db psql -U postgres default
+
+# List backups
+ls -lht ~/workspace/twentyone/backups/
+```
 
 ### DANGER - Data Loss Commands
 ```bash
-docker compose down -v     # Deletes all data volumes
-npx nx database:reset      # Wipes and reseeds database
+docker compose -f docker-compose.local.yml down -v   # Deletes all data volumes
+npx nx database:reset                                 # Wipes and reseeds database
 ```
 
 ### Safe Commands
 ```bash
-twenty-dev          # Keeps database running
-twenty-stop         # Stops apps, keeps database
-docker compose down # Data preserved in volume
+docker compose -f docker-compose.local.yml stop   # Stops containers, keeps data
+docker compose -f docker-compose.local.yml down   # Removes containers, keeps volumes
 ```
 
 ---

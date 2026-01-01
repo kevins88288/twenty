@@ -86,6 +86,12 @@ export default defineConfig(({ command, mode }) => {
         : {
             protocol: 'http',
           }),
+      allowedHosts: [
+        'localhost',
+        '127.0.0.1',
+        '.tail1c186b.ts.net',
+        'oci-codeserver.tail1c186b.ts.net',
+      ],
       fs: {
         allow: [
           searchForWorkspaceRoot(process.cwd()),
